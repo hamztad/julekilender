@@ -1,0 +1,18 @@
+# Ikke ta med WordPress-konfigurasjon
+wp-config.php
+wp-config*.php
+
+# Ikke ta med miljøfiler / nøkler hvis du får dem senere
+.env
+
+# Midlertidige/loggfiler
+*.log
+*.tmp
+
+# Systemmapper (vanligvis irrelevante)
+.DS_Store
+Thumbs.db
+
+# (valgfritt) Vanlige kataloger fra byggeprosjekter
+node_modules/
+vendor/

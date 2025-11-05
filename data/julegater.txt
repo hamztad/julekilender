@@ -1,0 +1,164 @@
+# 🎄 Christmas Riddles
+
+## Examples of Riddles
+
+1. hva er det som går og går og aldri kommer til døra?  
+   → Klokka!
+
+2. Hva er likheten på en hund?  
+   → Den gjør i begge ender!
+
+3. Hva er lite og rundt som et egg, men like langt som en kirkevegg?  
+   → Et garnnøste!
+
+4. Hvilket ord kan settes foran stille og boks, men bak øye og tilbake?  
+   → blikk! (blikkstille, blikkboks, øyeblikk og tilbakeblikk)
+
+5. I'm tall when I'm young, and I'm short when I'm old. What am I?  
+   → A candle
+
+6. What month of the year has 28 days?  
+   → All of them
+
+7. What is full of holes but still holds water?  
+   → A sponge
+
+8. What question can you never answer yes to?  
+   → Are you asleep yet?
+
+9. What is always in front of you but can't be seen?  
+   → The future
+
+10. There's a one-story house in which everything is yellow. Yellow walls, yellow doors, yellow furniture. What color are the stairs?  
+    → There aren't any—it's a one-story house.
+
+11. What can you break, even if you never pick it up or touch it?  
+    → A promise
+
+12. What goes up but never comes down?  
+    → Your age
+
+13. A man who was outside in the rain without an umbrella or hat didn't get a single hair on his head wet. Why?  
+    → He was bald.
+
+14. What gets wet while drying?  
+    → A towel
+
+15. What can you keep after giving to someone?  
+    → Your word
+
+16. I shave every day, but my beard stays the same. What am I?  
+    → A barber
+
+17. You see a boat filled with people, yet there isn't a single person on board. How is that possible?  
+    → All the people on the boat are married.
+
+18. You walk into a room that contains a match, a kerosene lamp, a candle and a fireplace. What would you light first?  
+    → The match
+
+19. A man dies of old age on his 25 birthday. How is this possible?  
+    → He was born on February 29.
+
+20. I have branches, but no fruit, trunk or leaves. What am I?  
+    → A bank
+
+21. What can't talk but will reply when spoken to?  
+    → An echo
+
+22. The more of this there is, the less you see. What is it?  
+    → Darkness
+
+23. David's parents have three sons: Snap, Crackle, and what's the name of the third son?  
+    → David
+
+24. I follow you all the time and copy your every move, but you can't touch me or catch me. What am I?  
+    → Your shadow
+
+25. What has many keys but can't open a single lock?  
+    → A piano
+
+26. What can you hold in your left hand but not in your right?  
+    → Your right elbow
+
+27. What is black when it's clean and white when it's dirty?  
+    → A chalkboard
+
+28. What gets bigger when more is taken away?  
+    → A hole
+
+29. I'm light as a feather, yet the strongest person can't hold me for five minutes. What am I?  
+    → Your breath
+
+30. I'm found in socks, scarves and mittens; and often in the paws of playful kittens. What am I?  
+    → Yarn
+
+31. Where does today come before yesterday?  
+    → The dictionary
+
+32. What invention lets you look right through a wall?  
+    → A window
+
+33. If you've got me, you want to share me; if you share me, you haven't kept me. What am I?  
+    → A secret
+
+34. What can't be put in a saucepan?  
+    → It's lid
+
+35. What goes up and down but doesn't move?  
+    → A staircase
+
+36. If you're running in a race and you pass the person in second place, what place are you in?  
+    → Second place
+
+37. It belongs to you, but other people use it more than you do. What is it?  
+    → Your name
+
+38. What has lots of eyes, but can't see?  
+    → A potato
+
+39. What has one eye, but can't see?  
+    → A needle
+
+40. What has many needles, but doesn't sew?  
+    → A Christmas tree
+
+41. What has hands, but can't clap?  
+    → A clock
+
+42. What has legs, but doesn't walk?  
+    → A table
+
+43. What has one head, one foot and four legs?  
+    → A bed
+
+44. What can you catch, but not throw?  
+    → A cold
+
+45. What kind of band never plays music?  
+    → A rubber band
+
+46. What has many teeth, but can't bite?  
+    → A comb
+
+47. What is cut on a table, but is never eaten?  
+    → A deck of cards
+
+48. What has words, but never speaks?  
+    → A book
+
+49. What runs all around a backyard, yet never moves?  
+    → A fence
+
+50. What can travel all around the world without leaving its corner?  
+    → A stamp
+
+51. What has a thumb and four fingers, but is not a hand?  
+    → A glove
+
+---
+
+## Notes
+You can add more riddles below following the same structure.
+Each riddle should have a clear question and a short, cheerful answer.
+Keep the humor family-friendly and festive.
+Note: The AI will translate and adapt these riddles to Norwegian when presenting them in the julekilender.

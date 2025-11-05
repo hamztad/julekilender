@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎄 Gruble Julekilender</title>
+<style>
+/* --- Kalenderlayout --- */
+body { margin: 0; font-family: system-ui, sans-serif; color: #111; background: radial-gradient(circle at 20% 20%, #fdf7f7 0%, #fff 40%, #f0f9ff 100%); }
+.festive-bg { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.festive-emoji { position: absolute; opacity: .7; filter: drop-shadow(0 2px 2px rgba(0,0,0,.15)); user-select: none; }
+.festive-emoji.reindeer { animation: flyAcrossRight 14s linear infinite; font-size: 36px; top: 8%; left: -10%; transform: scaleX(-1); }
+.festive-emoji.santa { animation: flyAcrossRight 18s linear infinite; font-size: 44px; top: 14%; left: -15%; animation-delay: 3s; transform: scaleX(-1); }
+.festive-emoji.tree { font-size: 28px; bottom: 6%; left: 6%; }
+.festive-emoji.gift { font-size: 22px; bottom: 10%; right: 8%; transform: rotate(-10deg); }
+@keyframes flyAcrossRight { 0%{ transform: scaleX(-1) translateX(0) translateY(0) } 50%{ transform: scaleX(-1) translateX(60vw) translateY(-4vh) } 100%{ transform: scaleX(-1) translateX(120vw) translateY(0) } }
+
+/* snø */
+.snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.snow span { position: absolute; top: -5vh; color: #9dd6ff; font-size: 12px; opacity: .8; animation: snowFall linear infinite; }
+@keyframes snowFall { 0%{ transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: .9; } 100%{ transform: translateY(110vh) translateX(10vw) rotate(360deg); opacity: .2; } }
+.header { text-align: center; padding: 20px 12px; }
+.header h1 { margin: 0; font-size: 28px; }
+.header p { margin: 6px 0 0; color: #444; }
+
+#calendar {
+  max-width: 1000px; margin: 0 auto; padding: 16px;
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.door {
+  position: relative; height: 120px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform .15s ease, box-shadow .15s ease, background .2s ease, border-color .2s ease;
+  background-image: linear-gradient(135deg, #fff 0%, #fff 60%, #f7f7ff 100%);
+}
+.door:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.12); }
+.door.locked { cursor: not-allowed; opacity: .7; filter: grayscale(.2); }
+.door.opened { background: linear-gradient(135deg, #ecfff4, #f7fff9); border-color: #0ea5e9; }
+.door .num { font-size: 30px; font-weight: 800; color: #14532d; text-shadow: 0 1px 0 #fff, 0 2px 0 rgba(0,0,0,.06); font-family: "Georgia", "Times New Roman", serif; letter-spacing: .5px; }
+.door.opened .num { color: #0b7a44; }
+
+/* --- Modal for chat --- */
+#modalBackdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; padding: 10px; z-index: 10001; }
+#modal { width: 100%; max-width: 960px; background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+#modalHeader { display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #f1f5f9; gap: 12px; }
+#modalHeader h3 { margin: 0; font-size: 18px; flex-shrink: 0; }
+#tipsCarousel { flex: 1; overflow: visible; min-height: 24px; position: relative; min-width: 0; }
+#tipsCarousel .tip { position: absolute; top: 0; left: 0; width: 100%; font-size: 13px; color: #666; line-height: 1.4; white-space: normal; word-wrap: break-word; opacity: 0; transform: translateX(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+#tipsCarousel .tip.active { opacity: 1; transform: translateX(0); position: relative; height: auto; }
+#closeModal { border: none; background: transparent; color: #7c3aed; border-radius: 50%; padding: 4px; cursor: pointer; font-size: 26px; line-height: 1; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; transition: transform .2s ease; transform: scaleX(-1); }
+#closeModal:hover { transform: scaleX(-1) translateX(4px) scale(1.05); animation: reindeerRun .8s linear infinite; }
+@keyframes reindeerRun { 0%{ transform: scaleX(-1) translateX(0) scale(1.05);} 50%{ transform: scaleX(-1) translateX(7px) scale(1.05);} 100%{ transform: scaleX(-1) translateX(0) scale(1.05);} }
+
+/* --- Chat gjenbruk (kompakt) --- */
+#chatbox { margin: 0; background: linear-gradient(180deg, #e6ffe6 0%, #ffffff 50%, #fff0f0 100%); border-radius: 0; border: none; padding: 12px; position: relative; }
+#conversation { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; max-height: 55vh; overflow-y: auto; padding-bottom: 120px; }
+.msg { max-width: 80%; padding: 10px 14px; border-radius: 18px; line-height: 1.4; white-space: pre-wrap; font-size: 15px; }
+.user { align-self: flex-end; background: #166534; color: #fff; border-bottom-right-radius: 4px; }
+.ai { align-self: flex-start; background: #fff; color: #111; border: 1px solid #e5e7eb; border-bottom-left-radius: 4px; }
+.controls { display: inline-flex; gap: 8px; color: #2563eb; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 4px 8px; margin-top: 6px; }
+#inputrow { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+textarea#prompt { flex: 1; background: #fff; color: #111; border: 1px solid #94a3b8; border-radius: 20px; padding: 8px 14px; font-size: 15px; line-height: 1.35; font-family: system-ui, sans-serif; resize: none; min-height: 38px; max-height: 220px; box-sizing: border-box; outline: none; overflow-y: auto; }
+#sendBtn, #hardStopBtn { width: 38px; height: 38px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; cursor: pointer; padding: 0; line-height: 1; }
+#sendBtn { background: #dc2626; }
+#hardStopBtn { background: #7c3aed; }
+
+/* mic med ring og prikk */
+#micWrapper { position: relative; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: transparent; cursor: pointer; flex-shrink: 0; }
+#micIcon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; color: #555; z-index: 3; transition: opacity .3s ease; }
+#micWrapper.recording #micIcon { opacity: 0; }
+#recordRing { position: absolute; top: 0; left: 0; width: 42px; height: 42px; transform: rotate(-90deg); z-index: 1; pointer-events: none; }
+#recordRing circle { fill: none; stroke-width: 3.5; transform-origin: 50% 50%; }
+#recordRing circle.bg { stroke: #e5e7eb; }
+#recordRing circle.progress { stroke: #e12222; stroke-linecap: round; stroke-dasharray: 119.38; stroke-dashoffset: 119.38; transition: stroke-dashoffset 20s linear, stroke 5s linear; }
+#recordDot { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: #e12222; border-radius: 50%; opacity: 0; z-index: 2; transition: opacity .3s ease; }
+#micWrapper.recording #recordDot { opacity: 1; animation: dotPulse 1s infinite ease-in-out; }
+@keyframes dotPulse { 0%,100%{ transform:translate(-50%,-50%) scale(1); opacity:.8;} 50%{ transform:translate(-50%,-50%) scale(1.4); opacity:1;} }
+
+.typing-indicator { display: inline-flex; align-items: center; gap: 5px; height: 20px; margin: 4px 0; padding-left: 8px; }
+.typing-indicator span { width: 6px; height: 6px; background-color: #2563eb; border-radius: 50%; opacity: 0.6; animation: typingBounce 1.4s infinite ease-in-out both; }
+.typing-indicator span:nth-child(2){ animation-delay: .2s; }
+.typing-indicator span:nth-child(3){ animation-delay: .4s; }
+@keyframes typingBounce { 0%,80%,100%{transform:scale(.6);opacity:.4;} 40%{transform:scale(1);opacity:1;} }
+
+/* Responsive design for små skjermer */
+@media (max-width: 640px) {
+  #modalHeader { padding: 8px 12px; gap: 8px; align-items: flex-start; }
+  #modalHeader h3 { font-size: 16px; }
+  #tipsCarousel { flex: 1; min-height: 20px; }
+  #tipsCarousel .tip { font-size: 11px; line-height: 1.3; }
+  #closeModal { width: 32px; height: 32px; font-size: 22px; flex-shrink: 0; }
+}
+@media (max-width: 480px) {
+  #tipsCarousel .tip { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎄 Gruble Julekilender</h1>
+    <p>Åpne en luke hver dag. KI hjelper deg med dagens oppgave.</p>
+  </div>
+  <div id="calendar"></div>
+
+  <div class="festive-bg" aria-hidden="true">
+    <div class="snow" id="snow"></div>
+    <div class="festive-emoji reindeer">🦌</div>
+    <div class="festive-emoji santa">🎅</div>
+    <div class="festive-emoji tree">🎄</div>
+    <div class="festive-emoji gift">🎁</div>
+  </div>
+
+  <div id="modalBackdrop">
+    <div id="modal">
+      <div id="modalHeader">
+        <h3 id="modalTitle">Luke</h3>
+        <div id="tipsCarousel">
+          <div class="tip active">💡 Si i fra hvis du ikke er fornøyd med svarene eller spørsmålene jeg gir.</div>
+          <div class="tip">📚 Sjekk alltid viktige opplysninger med sikre kilder, for eksempel leksikon.</div>
+          <div class="tip">🔄 Gi meg beskjed hvis jeg gir deg en oppgave du har fått før.</div>
+          <div class="tip">🎙️ Trykk på mikrofonen for å snakke inn svaret i stedet for å skrive.</div>
+          <div class="tip">❓ Still gjerne oppfølgingsspørsmål hvis du ikke forstår noe.</div>
+          <div class="tip">💭 Be om eksempler eller hint hvis en oppgave er vanskelig.</div>
+          <div class="tip">✨ Det er greit å ikke vite alt – det er derfor du lærer.</div>
+          <div class="tip">⏰ Ta deg tid – det er ingen hast.</div>
+        </div>
+        <button id="closeModal" title="Lukk" aria-label="Lukk">🦌</button>
+      </div>
+      <div id="chatbox">
+        <div id="conversation"></div>
+        <div id="inputrow">
+          <div id="micWrapper" title="Snakk">
+            <svg id="recordRing" width="42" height="42" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="19" class="bg"></circle>
+              <circle cx="21" cy="21" r="19" class="progress"></circle>
+            </svg>
+            <div id="recordDot"></div>
+            <span id="micIcon">🎙️</span>
+          </div>
+          <textarea id="prompt" placeholder="Skriv eller snakk her" rows="1"></textarea>
+          <button id="sendBtn" title="Send">➤</button>
+          <button id="hardStopBtn" title="Stopp generering">■</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Snøflak generering
+(function(){
+  const snow = document.getElementById('snow');
+  if (!snow) return;
+  const num = 40;
+  for (let i=0;i<num;i++){
+    const s = document.createElement('span');
+    s.textContent = Math.random() > .2 ? '❄️' : '✴️';
+    const size = 10 + Math.random()*14;
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.fontSize = size + 'px';
+    s.style.animationDuration = (8 + Math.random()*12) + 's';
+    s.style.animationDelay = (Math.random()*6) + 's';
+    snow.appendChild(s);
+  }
+})();
+// --- Generer kalenderdører ---
+const calendarEl = document.getElementById('calendar');
+const openedKey = 'julekilender_opened_days_v1';
+const opened = new Set(JSON.parse(localStorage.getItem(openedKey) || '[]'));
+const today = new Date();
+const currentDay = today.getMonth() === 11 ? Math.min(today.getDate(), 24) : 24; // i desember låses til dagens dato
+
+for (let d = 1; d <= 24; d++) {
+  const door = document.createElement('div');
+  door.className = 'door' + (opened.has(d) ? ' opened' : '') + (d > currentDay ? ' locked' : '');
+  door.dataset.day = d;
+  const num = document.createElement('div');
+  num.className = 'num';
+  num.textContent = d;
+  door.appendChild(num);
+  if (d > currentDay) {
+    door.title = 'Lukket til riktig dato';
+  } else {
+    door.addEventListener('click', () => openDoor(d));
+  }
+  calendarEl.appendChild(door);
+}
+
+function markOpened(day) {
+  opened.add(day);
+  localStorage.setItem(openedKey, JSON.stringify(Array.from(opened)));
+  const el = document.querySelector(`.door[data-day="${day}"]`);
+  if (el) el.classList.add('opened');
+}
+
+// --- Modal og chat ---
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalTitle = document.getElementById('modalTitle');
+const closeModal = document.getElementById('closeModal');
+const conversation = document.getElementById('conversation');
+const input = document.getElementById('prompt');
+function resizePrompt(){
+  input.style.height = 'auto';
+  const newH = Math.min(input.scrollHeight, 220);
+  input.style.height = newH + 'px';
+}
+const sendBtn = document.getElementById('sendBtn');
+const hardStopBtn = document.getElementById('hardStopBtn');
+const micWrapper = document.getElementById('micWrapper');
+const ringProgress = micWrapper.querySelector('#recordRing .progress');
+let activeAudio = null; let stopRequested = false; let isPaused = false; let chatHistory = [];
+let activeDay = null;
+
+function openDoor(day) {
+  activeDay = day;
+  modalTitle.textContent = `Luke ${day}`;
+  modalBackdrop.style.display = 'flex';
+  conversation.innerHTML = '';
+  chatHistory = [];
+  // Vis en vennlig introduksjon før brukeren skriver
+  const intro = document.createElement('div');
+  intro.className = 'msg ai';
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('no-NO', { weekday: 'long', day: 'numeric', month: 'long' });
+  const daysLeft = Math.max(0, 24 - day);
+  
+  // Varierte innledningsspørsmål - en unik for hver dag (1-24)
+  const openingQuestions = {
+    1: "Hva er det første du tenker på når du hører ordet 'jul'?",
+    2: "Hva er din favorittjulekake?",
+    3: "Kan du fortelle meg om et juleminne du har?",
+    4: "Hva liker du best med juletiden?",
+    5: "Hvilken julesang er din favoritt?",
+    6: "Hva er din favorittjulemat?",
+    7: "Hva gjør du gjerne sammen med andre i juletiden?",
+    8: "Hva er det beste med adventskalenderen?",
+    9: "Kan du fortelle meg om en juletradisjon du har?",
+    10: "Hva er din favorittjulefilm?",
+    11: "Hva er det beste julegaven du har fått?",
+    12: "Hva er din favorittjuleting å gjøre?",
+    13: "Kan du fortelle meg om et sted du gjerne vil være i juletiden?",
+    14: "Hva er det beste med snø?",
+    15: "Hva er din favorittjulefarge?",
+    16: "Hva er det første du legger merke til når det blir jul?",
+    17: "Hva er det beste med å vente på jul?",
+    18: "Hva er din favorittjuleting å spise?",
+    19: "Kan du fortelle meg om noe du ser fram til i juletiden?",
+    20: "Hva er det beste med julelysene?",
+    21: "Hva er din favorittjuleaktivitet?",
+    22: "Hva er det første du gjør på julaften?",
+    23: "Kan du fortelle meg om en juleting du liker å gjøre eller lage sammen med andre?",
+    24: "Hva er det første du tenker på når du våkner på julaften?"
+  };
+  
+  const openingQuestion = openingQuestions[day] || openingQuestions[1];
+  
+  if (day === 24) {
+    intro.textContent = `I dag er det endelig JULAFTEN!! ${dateStr} – luke ${day}. ${openingQuestion}`;
+  } else {
+    intro.textContent = `God advent! I dag er det ${dateStr} – luke ${day}. Det er ${daysLeft} ${daysLeft === 1 ? 'dag' : 'dager'} igjen til julaften. ${openingQuestion}`;
+  }
+  conversation.appendChild(intro);
+  addAudioControls(intro); // Legg til lydkontroller på intro-meldingen
+  markOpened(day);
+}
+
+closeModal.addEventListener('click', () => {
+  modalBackdrop.style.display = 'none';
+  // Stopp evt. lyd
+  if (activeAudio) { try { activeAudio.pause(); activeAudio.currentTime = 0; } catch(e){} activeAudio = null; }
+});
+
+sendBtn.addEventListener('click', (e)=>{ e.preventDefault(); send(); });
+input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }});
+input.addEventListener('input', resizePrompt);
+input.addEventListener('paste', ()=>{ setTimeout(resizePrompt, 0); });
+
+async function send(){
+  const userText = input.value.trim();
+  if (!userText) return;
+  stopRequested = false;
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.textContent = userText;
+  conversation.appendChild(userMsg);
+  input.value = '';
+  input.style.height = '38px';
+  conversation.scrollTop = conversation.scrollHeight;
+
+  const aiMsg = document.createElement('div');
+  aiMsg.className = 'msg ai';
+  aiMsg.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+  conversation.appendChild(aiMsg);
+  conversation.scrollTop = conversation.scrollHeight;
+
+  // bygg meldinger (inkluder dag som kontekst til backend)
+  chatHistory.push({ role: 'user', content: userText });
+  const payload = { messages: chatHistory, mode: 'calendar', day: activeDay };
+
+  try {
+    const res = await fetch('/wp-content/themes/gruble/julekalender-api/openai.php', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    let text = data.reply || JSON.stringify(data, null, 2);
+    aiMsg.innerHTML = '';
+    typeWriter(aiMsg, text);
+    chatHistory.push({ role: 'assistant', content: text });
+  } catch (err) {
+    aiMsg.textContent = 'Feil ved tilkobling til OpenAI.';
+  }
+}
+
+function typeWriter(el, text){
+  const originalText = text;
+  const plain = originalText.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1');
+  let i = 0; const speed = 18; el.textContent = '';
+  (function write(){
+    if (stopRequested) return;
+    if (i < plain.length) { el.textContent = plain.slice(0, i++); conversation.scrollTop = conversation.scrollHeight; setTimeout(write, speed); }
+    else { el.innerHTML = originalText.replace(/\*\*(.*?)\*\*/g,'<strong>$1<\/strong>').replace(/\*(.*?)\*/g,'<em>$1<\/em>'); addAudioControls(el); }
+  })();
+}
+
+function addAudioControls(msgEl){
+  const old = msgEl.querySelector('.controls'); if (old) old.remove();
+  const controls = document.createElement('div'); controls.className = 'controls';
+  const playBtn = document.createElement('span'); const pauseBtn = document.createElement('span'); const stopBtn = document.createElement('span');
+  playBtn.textContent = '▶️'; pauseBtn.textContent = '⏸️'; stopBtn.textContent = '⏹️';
+  pauseBtn.style.display = 'none'; stopBtn.style.display = 'none';
+  controls.append(playBtn, pauseBtn, stopBtn); msgEl.appendChild(controls);
+  let audio = null;
+
+  playBtn.addEventListener('click', async ()=>{
+    try {
+      if (stopRequested) return;
+      if (audio && isPaused) { audio.play(); isPaused = false; playBtn.style.display='none'; pauseBtn.style.display='inline'; stopBtn.style.display='inline'; return; }
+      if (audio) { audio.pause(); audio.currentTime = 0; audio = null; }
+      if (activeAudio && !activeAudio.paused) { activeAudio.pause(); activeAudio.currentTime = 0; activeAudio = null; }
+      playBtn.textContent = '⏳'; pauseBtn.style.display='none'; stopBtn.style.display='none';
+      const res = await fetch('/wp-content/themes/gruble/julekalender-api/tts.php', { method: 'POST', body: new URLSearchParams({ text: msgEl.textContent }) });
+      if (!res.ok) throw new Error('Kunne ikke hente lyd fra TTS.');
+      const blob = await res.blob(); const url = URL.createObjectURL(blob);
+      audio = new Audio(url); activeAudio = audio;
+      audio.addEventListener('canplaythrough', ()=>{ if (audio.hasStarted) return; audio.hasStarted = true; playBtn.style.display='none'; pauseBtn.style.display='inline'; stopBtn.style.display='inline'; audio.play().catch(()=>{}); }, { once: true });
+      audio.onended = ()=>{ playBtn.textContent='▶️'; playBtn.style.display='inline'; pauseBtn.style.display='none'; stopBtn.style.display='none'; activeAudio = null; audio = null; isPaused = false; };
+    } catch(err){ alert('Feil ved opplesing: ' + err.message); playBtn.textContent = '▶️'; }
+  });
+
+  pauseBtn.addEventListener('click', ()=>{ if (audio && !audio.paused) { audio.pause(); isPaused = true; activeAudio = audio; playBtn.textContent='▶️'; playBtn.style.display='inline'; pauseBtn.style.display='none'; stopBtn.style.display='inline'; }});
+  stopBtn.addEventListener('click', ()=>{ if (audio) { audio.pause(); audio.currentTime = 0; audio = null; activeAudio = null; } isPaused = false; playBtn.textContent='▶️'; playBtn.style.display='inline'; pauseBtn.style.display='none'; stopBtn.style.display='none'; });
+}
+
+hardStopBtn.addEventListener('click', ()=>{
+  stopRequested = true;
+  if (activeAudio) { try { activeAudio.pause(); activeAudio.currentTime = 0; } catch(e){} activeAudio = null; }
+  document.querySelectorAll('.controls span:nth-child(3)').forEach(btn=>{ try { btn.click(); } catch(e){} });
+  setTimeout(()=>{ stopRequested = false; }, 200);
+});
+
+// Mic med 4s stillhet og 20s maks
+let mediaRecorder, audioChunks = [], isRecording = false, stream = null;
+let audioContext = null, analyser = null, processor = null;
+let currentMimeType = 'audio/webm'; // Lagrer formatet som brukes
+micWrapper.addEventListener('click', async ()=>{
+  if (isRecording) { stopRecording(); return; }
+  try {
+    // Sjekk om API er tilgjengelig (støtter både nytt og gammelt API)
+    const getUserMedia = navigator.mediaDevices?.getUserMedia || 
+                         navigator.getUserMedia || 
+                         navigator.webkitGetUserMedia || 
+                         navigator.mozGetUserMedia || 
+                         navigator.msGetUserMedia;
+    
+    if (!getUserMedia) {
+      alert('Mikrofon er ikke støttet i denne nettleseren. Prøv en nyere nettleser.');
+      return;
+    }
+
+    // Sjekk HTTPS (påkrevd på de fleste nettlesere, unntatt localhost)
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      alert('Mikrofon krever HTTPS. Vennligst bruk https:// i stedet for http://');
+      return;
+    }
+
+    // Bruk det nye API-et hvis tilgjengelig, ellers fallback til gammelt API
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } else {
+      // Fallback til gammelt API (løfter promise)
+      stream = await new Promise((resolve, reject) => {
+        getUserMedia.call(navigator, { audio: true }, resolve, reject);
+      });
+    }
+    
+    // Lydgraf for stillhetsdeteksjon - med feilhåndtering for mobil
+    try {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioContext.createMediaStreamSource(stream);
+      analyser = audioContext.createAnalyser();
+      processor = audioContext.createScriptProcessor(2048, 1, 1);
+      source.connect(analyser);
+      analyser.connect(processor);
+      processor.connect(audioContext.destination);
+    } catch(audioErr) {
+      console.warn('AudioContext-feil (støttes kanskje ikke på denne enheten):', audioErr);
+      // Fortsett uten stillhetsdeteksjon hvis AudioContext ikke fungerer
+    }
+
+    // Velg best format for mobil (mpeg støttes ofte bedre enn webm)
+    currentMimeType = 'audio/webm';
+    if (MediaRecorder.isTypeSupported('audio/mpeg')) {
+      currentMimeType = 'audio/mpeg';
+    } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+      currentMimeType = 'audio/mp4';
+    } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+      currentMimeType = 'audio/webm';
+    }
+
+    const options = { mimeType: currentMimeType };
+    mediaRecorder = new MediaRecorder(stream, options);
+    audioChunks = [];
+    isRecording = true;
+    micWrapper.title = 'Opptak pågår...';
+
+    // vis ring / prikk animasjon
+    micWrapper.classList.add('recording');
+    if (ringProgress) {
+      ringProgress.style.transition = 'none';
+      ringProgress.style.strokeDashoffset = 119.38;
+      void ringProgress.offsetWidth;
+      ringProgress.style.transition = 'stroke-dashoffset 20s linear';
+      ringProgress.style.strokeDashoffset = 0;
+    }
+
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+    // Stillhetsdeteksjon 4s (kun hvis AudioContext fungerte)
+    if (processor) {
+      let silenceMs = 0;
+      const silenceThreshold = 0.015;
+      processor.onaudioprocess = e => {
+        const inputBuf = e.inputBuffer.getChannelData(0);
+        let sum = 0.0; for (let i = 0; i < inputBuf.length; i++) sum += inputBuf[i] * inputBuf[i];
+        const rms = Math.sqrt(sum / inputBuf.length);
+        if (rms < silenceThreshold) {
+          silenceMs += e.inputBuffer.duration * 1000;
+          if (silenceMs > 4000 && isRecording) stopRecording();
+        } else {
+          silenceMs = 0;
+        }
+      };
+    }
+
+    const autoStopTimer = setTimeout(()=>{ if (isRecording) stopRecording(); }, 20000);
+
+    mediaRecorder.onstop = async ()=>{
+      clearTimeout(autoStopTimer);
+      // reset ring
+      micWrapper.classList.remove('recording');
+      if (ringProgress) {
+        ringProgress.style.transition = 'none';
+        ringProgress.style.strokeDashoffset = 119.38;
+      }
+      // rydde lydgraf
+      try {
+        if (processor) { processor.disconnect(); processor.onaudioprocess = null; }
+        if (analyser) analyser.disconnect();
+        if (audioContext) audioContext.close();
+      } catch(_){}
+
+      const blob = new Blob(audioChunks, { type: currentMimeType });
+      const fileName = currentMimeType.includes('webm') ? 'voice.webm' : currentMimeType.includes('mp4') ? 'voice.m4a' : 'voice.mp3';
+      const formData = new FormData(); formData.append('file', blob, fileName);
+      try {
+        const res = await fetch('/wp-content/themes/gruble/julekalender-api/whisper.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.text) { input.value = data.text.trim(); resizePrompt(); input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+        else { alert('Whisper-feil: ' + (data.error || 'ukjent feil')); }
+      } catch (err){ alert('Opplastingsfeil: ' + (err.message || '')); }
+    };
+
+    mediaRecorder.start();
+  } catch(e){ 
+    let errorMsg = 'Mikrofon-tilgang avslått eller ikke tilgjengelig.';
+    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+      errorMsg = 'Mikrofontilgang er avslått. Vennligst gå til nettleserinnstillingene og gi tilgang til mikrofon, deretter prøv igjen.';
+    } else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
+      errorMsg = 'Ingen mikrofon funnet. Sjekk at en mikrofon er koblet til eller aktivert.';
+    } else if (e.name === 'NotReadableError' || e.name === 'TrackStartError') {
+      errorMsg = 'Mikrofon kan ikke brukes (kanskje brukt av en annen app?). Prøv å lukke andre apper som bruker mikrofonen.';
+    }
+    alert(errorMsg);
+    console.error('Mikrofon-feil:', e);
+  }
+});
+function stopRecording(){
+  if (isRecording) { try { mediaRecorder.stop(); } catch(_){} isRecording = false; }
+  if (stream && stream.getTracks) stream.getTracks().forEach(t=>t.stop());
+  try {
+    if (processor) { processor.disconnect(); processor.onaudioprocess = null; }
+    if (analyser) analyser.disconnect();
+    if (audioContext && audioContext.state !== 'closed') audioContext.close();
+  } catch(_){}
+  micWrapper.title = 'Snakk';
+}
+
+// Tips rotasjon
+(function(){
+  const tips = document.querySelectorAll('#tipsCarousel .tip');
+  if (tips.length === 0) return;
+  let currentIndex = 0;
+  
+  function rotateTips(){
+    tips[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % tips.length;
+    tips[currentIndex].classList.add('active');
+  }
+  
+  // Roter hvert 8. sekund
+  setInterval(rotateTips, 8000);
+})();
+</script>
+</body>
+</html>

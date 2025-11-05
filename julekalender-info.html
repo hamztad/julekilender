@@ -1,0 +1,471 @@
+<section id="julekilender-info" aria-label="Informasjon om Gruble Julekilender">
+
+  <style>
+
+    /* ---------- HOVEDSTIL FOR INFOKORTET ---------- */
+
+    #julekilender-info .gl-card {
+
+      max-width: 760px;
+
+      margin: 24px auto;
+
+      background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+
+      border: 2px solid #0ea5e9;
+
+      border-radius: 14px;
+
+      box-shadow: 0 8px 24px rgba(22, 101, 52, 0.12);
+
+      padding: 28px 26px;
+
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif !important;
+
+      color: #111 !important;
+
+      line-height: 1.8 !important;
+
+      font-size: 1.15rem !important;
+
+    }
+
+
+
+    /* ---------- TITTEL OG BADGE ---------- */
+
+    #julekilender-info .gl-title {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center; /* midtstill overskrift */
+
+      gap: 12px;
+
+      margin: 0 0 14px 0;
+
+      font-size: 2rem !important;
+
+      line-height: 1.3 !important;
+
+      color: #166534 !important;
+
+      font-weight: 800 !important;
+
+      letter-spacing: 0.2px;
+
+      text-align: center;
+
+    }
+
+
+
+    #julekilender-info .gl-badge {
+
+      display: inline-block;
+
+      font-size: 1rem !important;
+
+      font-weight: 700;
+
+      color: #dc2626;
+
+      background: #fee2e2;
+
+      border: 1px solid #fecaca;
+
+      border-radius: 999px;
+
+      padding: 6px 14px;
+
+      letter-spacing: .3px;
+
+    }
+
+
+
+    /* ---------- BRØDTEKST ---------- */
+
+    #julekilender-info .gl-body {
+
+      font-size: 1.2rem !important;
+
+      line-height: 1.9 !important;
+
+      margin: 10px 0 0 0;
+
+      color: #222 !important;
+
+    }
+
+
+
+    #julekilender-info .gl-body strong {
+
+      font-weight: 700;
+
+      color: #166534;
+
+    }
+
+
+
+    /* ---------- "GODE RÅD"-BOKS SOM KNAPP ---------- */
+
+    #julekilender-info .gl-advice {
+
+      margin-bottom: 24px;
+
+      padding: 24px 28px;
+
+      border: 2px dashed #0ea5e9;
+
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+
+      border-radius: 12px;
+
+      text-align: center;
+
+      box-shadow: 0 3px 10px rgba(22, 101, 52, 0.08);
+
+      cursor: pointer;
+
+      transition: all 0.3s ease;
+
+    }
+
+
+
+    #julekilender-info .gl-advice:hover {
+
+      background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+
+      transform: scale(1.01);
+
+      box-shadow: 0 5px 14px rgba(22, 101, 52, 0.12);
+
+    }
+
+
+
+    #julekilender-info .gl-advice h4 {
+
+      margin: 0 0 10px 0;
+
+      font-size: 1.8rem;
+
+      color: #166534;
+
+      font-weight: 800;
+
+    }
+
+
+
+    #julekilender-info .gl-advice p {
+
+      margin: 0;
+
+      color: #333;
+
+      font-size: 1.25rem;
+
+      line-height: 1.6;
+
+    }
+
+
+
+    /* ---------- MODAL ---------- */
+
+    #tipsModal {
+
+      display: none;
+
+      position: fixed;
+
+      z-index: 10000;
+
+      left: 0; top: 0;
+
+      width: 100%; height: 100%;
+
+      background-color: rgba(0,0,0,0.5);
+
+      backdrop-filter: blur(3px);
+
+    }
+
+
+
+    .modal-content {
+
+      background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+
+      margin: 8% auto;
+
+      padding: 25px 30px;
+
+      border-radius: 12px;
+
+      border: 2px solid #0ea5e9;
+
+      width: 90%;
+
+      max-width: 550px;
+
+      color: #111;
+
+      font-family: system-ui, sans-serif;
+
+      line-height: 1.6;
+
+      box-shadow: 0 8px 24px rgba(22, 101, 52, 0.2);
+
+      animation: fadeIn 0.3s ease;
+
+      max-height: 80vh;           /* gjør modalen scrollbar */
+
+      overflow-y: auto;           /* scroll på innholdet */
+
+      scrollbar-width: thin;
+
+      scrollbar-color: #166534 #f1f1f1;
+
+    }
+
+
+
+    .modal-content::-webkit-scrollbar {
+
+      width: 8px;
+
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+
+      background-color: #166534;
+
+      border-radius: 10px;
+
+    }
+
+
+
+    @keyframes fadeIn {
+
+      from { opacity: 0; transform: scale(0.95); }
+
+      to { opacity: 1; transform: scale(1); }
+
+    }
+
+
+
+    .modal-content h2 {
+
+      margin-top: 0;
+
+      color: #166534;
+
+      text-align: center;
+
+      font-size: 24px;
+
+    }
+
+
+
+    .modal-content p {
+
+      font-size: 16px;
+
+      color: #333;
+
+      margin-bottom: 10px;
+
+    }
+
+
+
+    .modal-content ol {
+
+      padding-left: 22px;
+
+      text-align: left;
+
+    }
+
+
+
+    .modal-content li {
+
+      margin-bottom: 8px;
+
+      color: #222;
+
+    }
+
+
+
+    .modal-content li strong {
+
+      color: #166534;
+
+    }
+
+
+
+    #closeModal {
+
+      color: #dc2626;
+
+      float: right;
+
+      font-size: 26px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+    #closeModal:hover { color: #b91c1c; }
+
+
+
+    /* ---------- RESPONSIVT ---------- */
+
+    @media (max-width: 480px) {
+
+      #julekilender-info .gl-card { padding: 22px; font-size: 1.05rem !important; }
+
+      #julekilender-info .gl-title { font-size: 1.6rem !important; }
+
+      #julekilender-info .gl-advice h4 { font-size: 1.5rem; }
+
+      #julekilender-info .gl-advice p { font-size: 1.1rem; }
+
+    }
+
+  </style>
+
+
+
+  <div class="gl-card">
+
+    <div class="gl-title">
+
+      🎄 God advent!
+
+      <span class="gl-badge">Julekilender 2025</span>
+
+    </div>
+
+
+
+    <!-- 💡 Klikkbar "Gode råd"-boks -->
+
+    <div class="gl-advice" id="tipsBox">
+
+      <h4>💡 Gode råd</h4>
+
+      <p>Vil du vite hvordan du kan få mest mulig ut av julekilenderen? Trykk her for å lese nyttige tips!</p>
+
+    </div>
+
+
+
+    <div class="gl-body">
+
+      Gruble Julekilender bruker <strong>OpenAIs GPT-4o-mini</strong> for å gi deg daglige utfordringer og hjelp gjennom adventen.
+
+      AI kan hjelpe med mye, men akkurat som alle språkmodeller gjør den også feil noen ganger. Viktig informasjon bør alltid
+
+      sjekkes med andre og trygge kilder. Foreldre, lærere, kvalitetssikrede oppslagsverk og andre gode hjelpere er viktige
+
+      for å dobbeltsjekke det du får. Men forhåpentligvis vil det meste være til god og morsom hjelp! Si gjerne i fra hvis
+
+      du synes noe skurrer ved det AI-en sier – den lærer og forbedrer seg. Takk for at du tester. God jul og lykke til med utfordringene! 🎅✨
+
+    </div>
+
+  </div>
+
+
+
+  <!-- 🔹 Modal med tips -->
+
+  <div id="tipsModal">
+
+    <div class="modal-content">
+
+      <span id="closeModal">&times;</span>
+
+      <h2>Gode råd for å bruke julekilenderen</h2>
+
+      <p>Her er noen tips til hvordan du kan få mest mulig ut av dagens utfordringer:</p>
+
+      <ol>
+
+        <li><strong>Still oppfølgingsspørsmål:</strong> Hvis du ikke helt forstår en oppgave, kan du spørre hva som menes med bestemte ord eller uttrykk.</li>
+
+        <li><strong>Bruk mikrofon:</strong> Prøv å snakke svarene dine inn i stedet for å skrive – det kan være raskere og mer naturlig.</li>
+
+        <li><strong>Si ifra hvis noe skurrer:</strong> AI-en kan gjøre feil – både i spørsmål, opplysninger og svar. Si gjerne i fra hvis du tenker at noe ikke stemmer.</li>
+
+        <li><strong>Be om eksempler:</strong> Be om konkrete eksempler som kan illustrere oppgaven eller svaret bedre.</li>
+
+        <li><strong>Prøv flere ganger:</strong> Hvis en oppgave er vanskelig, prøv igjen eller be om hint. Du kan også be om å prøve en litt enklere variant.</li>
+
+        <li><strong>Praktiske aktiviteter:</strong> For tegneaktiviteter eller andre ting du lager, vis det til noen i nærheten og fortell hva du har laget.</li>
+
+        <li><strong>Ta deg tid:</strong> Du trenger ikke fullføre alle utfordringene på én dag – kom gjerne tilbake senere.</li>
+
+        <li><strong>Ha det gøy:</strong> Dette skal være hyggelig og lærerikt. Ikke nøl med å spørre om noe eller si ifra hvis det er noe du lurer på!</li>
+
+      </ol>
+
+    </div>
+
+  </div>
+
+
+
+  <script>
+
+    const tipsBox = document.getElementById("tipsBox");
+
+    const tipsModal = document.getElementById("tipsModal");
+
+    const closeModal = document.getElementById("closeModal");
+
+
+
+    tipsBox.addEventListener("click", () => {
+
+      tipsModal.style.display = "block";
+
+    });
+
+
+
+    closeModal.addEventListener("click", () => {
+
+      tipsModal.style.display = "none";
+
+    });
+
+
+
+    window.addEventListener("click", e => {
+
+      if (e.target === tipsModal) tipsModal.style.display = "none";
+
+    });
+
+  </script>
+
+</section>
